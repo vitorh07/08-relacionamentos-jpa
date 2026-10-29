@@ -1,10 +1,12 @@
 package br.com.glaucotodesco.jparelacionamentos.config;
 
 import br.com.glaucotodesco.jparelacionamentos.model.Aluno;
+import br.com.glaucotodesco.jparelacionamentos.model.Categoria;
 import br.com.glaucotodesco.jparelacionamentos.model.Curso;
 import br.com.glaucotodesco.jparelacionamentos.model.Instrutor;
 import br.com.glaucotodesco.jparelacionamentos.model.Perfil;
 import br.com.glaucotodesco.jparelacionamentos.repository.AlunoRepository;
+import br.com.glaucotodesco.jparelacionamentos.repository.CategoriaRepository;
 import br.com.glaucotodesco.jparelacionamentos.repository.CursoRepository;
 import br.com.glaucotodesco.jparelacionamentos.repository.InstrutorRepository;
 import br.com.glaucotodesco.jparelacionamentos.repository.PerfilRepository;
@@ -20,7 +22,8 @@ public class DataInitializer {
             PerfilRepository perfilRepository,
             InstrutorRepository instrutorRepository,
             CursoRepository cursoRepository,
-            AlunoRepository alunoRepository
+            AlunoRepository alunoRepository,
+            CategoriaRepository categoriaRepository
     ) {
         return args -> {
             var perfilAna = new Perfil();
@@ -45,20 +48,32 @@ public class DataInitializer {
             instrutorRepository.save(carlos);
             instrutorRepository.save(mariana);
 
+            var backend = new Categoria();
+            backend.setNome("Back-end");
+
+            var banco = new Categoria();
+            banco.setNome("Banco de Dados");
+
+            categoriaRepository.save(backend);
+            categoriaRepository.save(banco);
+
             var javaSpring = new Curso();
             javaSpring.setNome("Java e Spring");
             javaSpring.setCargaHoraria(40);
             javaSpring.setInstrutor(carlos);
+            javaSpring.setCategoria(backend);
 
             var apiRest = new Curso();
             apiRest.setNome("APIs REST com Spring");
             apiRest.setCargaHoraria(20);
             apiRest.setInstrutor(carlos);
+            apiRest.setCategoria(backend);
 
             var jpaHibernate = new Curso();
             jpaHibernate.setNome("JPA e Hibernate");
             jpaHibernate.setCargaHoraria(24);
             jpaHibernate.setInstrutor(mariana);
+            jpaHibernate.setCategoria(banco);
 
             cursoRepository.save(javaSpring);
             cursoRepository.save(apiRest);

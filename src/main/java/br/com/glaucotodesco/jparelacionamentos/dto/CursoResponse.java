@@ -10,6 +10,7 @@ public record CursoResponse(
         Long id,
         String nome,
         Integer cargaHoraria,
+        CategoriaResponse categoria,
         InstrutorResumoResponse instrutor,
         List<AlunoResumoResponse> alunos
 ) {
@@ -23,6 +24,7 @@ public record CursoResponse(
                 curso.getId(),
                 curso.getNome(),
                 curso.getCargaHoraria(),
+                CategoriaResponse.from(curso.getCategoria()),
                 InstrutorResumoResponse.from(curso.getInstrutor()),
                 alunos
         );

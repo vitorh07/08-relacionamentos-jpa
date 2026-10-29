@@ -6,6 +6,7 @@ import br.com.glaucotodesco.jparelacionamentos.dto.CursoResponse;
 import br.com.glaucotodesco.jparelacionamentos.model.Aluno;
 import br.com.glaucotodesco.jparelacionamentos.model.Curso;
 import br.com.glaucotodesco.jparelacionamentos.repository.AlunoRepository;
+import br.com.glaucotodesco.jparelacionamentos.repository.CategoriaRepository;
 import br.com.glaucotodesco.jparelacionamentos.repository.CursoRepository;
 import br.com.glaucotodesco.jparelacionamentos.repository.InstrutorRepository;
 import org.springframework.http.HttpStatus;
@@ -23,25 +24,30 @@ public class CursoService {
     private final CursoRepository cursoRepository;
     private final InstrutorRepository instrutorRepository;
     private final AlunoRepository alunoRepository;
+    private final CategoriaRepository categoriaRepository;
 
     public CursoService(
             CursoRepository cursoRepository,
             InstrutorRepository instrutorRepository,
-            AlunoRepository alunoRepository
+            AlunoRepository alunoRepository,
+            CategoriaRepository categoriaRepository
     ) {
         this.cursoRepository = cursoRepository;
         this.instrutorRepository = instrutorRepository;
         this.alunoRepository = alunoRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     @Transactional
     public CursoResponse criar(CursoRequest request) {
         var instrutor = buscarInstrutor(request.instrutorId());
+        var categoria = buscarCategoria(request.categoriaId());
 
         var curso = new Curso();
         curso.setNome(request.nome());
         curso.setCargaHoraria(request.cargaHoraria());
         curso.setInstrutor(instrutor);
+        curso.setCategoria(categoria);
 
         return CursoResponse.from(cursoRepository.save(curso));
     }
@@ -63,10 +69,12 @@ public class CursoService {
     public CursoResponse atualizar(Long id, CursoRequest request) {
         var curso = buscarEntidade(id);
         var instrutor = buscarInstrutor(request.instrutorId());
+        var categoria = buscarCategoria(request.categoriaId());
 
         curso.setNome(request.nome());
         curso.setCargaHoraria(request.cargaHoraria());
         curso.setInstrutor(instrutor);
+        curso.setCategoria(categoria);
 
         return CursoResponse.from(cursoRepository.save(curso));
     }
@@ -116,6 +124,14 @@ public class CursoService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Instrutor não encontrado: " + id
+                ));
+    }
+
+    private br.com.glaucotodesco.jparelacionamentos.model.Categoria buscarCategoria(Long id) {
+        return categoriaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Categoria não encontrada: " + id
                 ));
     }
 }

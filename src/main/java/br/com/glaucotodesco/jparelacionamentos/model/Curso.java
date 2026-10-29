@@ -37,4 +37,8 @@ public class Curso {
 
     @ManyToMany(mappedBy = "cursos")
     private Set<Aluno> alunos = new LinkedHashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 public record CursoRequest(
         @NotBlank String nome,
         @NotNull @Positive Integer cargaHoraria,
-        @NotNull @Positive Long instrutorId
+        @NotNull @Positive Long instrutorId,
+        @NotNull @Positive Long categoriaId
 ) {
 }
